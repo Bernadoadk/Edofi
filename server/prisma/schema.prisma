@@ -1,0 +1,239 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  email      String   @unique
+  password   String
+  first_name String
+  last_name  String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Relations
+  events Event[]
+  notifications Notification[]
+  notification_preferences NotificationPreference?
+
+  @@map("users")
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  icon        String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  // Relations
+  events Event[]
+
+  @@map("categories")
+}
+
+model Event {
+  id               Int      @id @default(autoincrement())
+  title            String
+  description      String
+  event_type       EventType
+  start_date       DateTime
+  start_time       String
+  end_date         DateTime?
+  end_time         String
+  duration_type    DurationType?
+  duration_value   Int?
+  location_address String
+  location_lat     Float
+  location_lng     Float
+  banner_image     String?
+  is_published     Boolean  @default(false)
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+
+  // Relations
+  user_id     Int
+  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  category_id Int
+  category    Category @relation(fields: [category_id], references: [id])
+  tickets     Ticket[]
+
+  @@map("events")
+}
+
+model Ticket {
+  id          Int      @id @default(autoincrement())
+  name        String
+  price       Float
+  quantity    Int
+  description String?
+  currency    String   @default("EUR")
+  event_id    Int
+  event       Event    @relation(fields: [event_id], references: [id], onDelete: Cascade)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  @@map("tickets")
+}
+
+enum EventType {
+  single
+  recurring
+}
+
+enum DurationType {
+  days
+  hours
+}
+
+enum NotificationType {
+  // Planification (8 types)
+  EVENT_REMINDER
+  CREATION_DEADLINE
+  MATERIAL_PREPARATION
+  FINALIZATION_REMINDER
+  MODIFICATION_DEADLINE
+  PUBLICATION_REMINDER
+  VERIFICATION_REMINDER
+  CONFIGURATION_REMINDER
+
+  // Réservations (12 types)
+  NEW_BOOKING
+  BOOKING_CANCELLATION
+  CAPACITY_REACHED
+  PAYMENT_RECEIVED
+  PAYMENT_FAILED
+  REFUND_PROCESSED
+  WAITLIST_ACTIVATED
+  BOOKING_CONFIRMATION
+  PARTICIPANT_REMINDER
+  STATUS_CHANGE
+  NEW_TICKET_AVAILABLE
+  TICKET_PROMOTION
+
+  // Social (10 types)
+  NEW_PARTICIPANT
+  NEW_COMMENT
+  EVENT_SHARED
+  EVENT_FAVORITED
+  NEW_FOLLOWER
+  COMMENT_MENTION
+  COMMENT_REPLY
+  EVENT_RECOMMENDED
+  NEW_LIKE
+  NEW_RATING
+
+  // Performance (8 types)
+  EVENT_TRENDING
+  VIEWS_RECORD
+  RECOMMENDATION_ENGINE
+  DAILY_STATS
+  EVENT_VIRAL
+  FOLLOWER_GROWTH
+  EVENT_POPULAR
+  GOAL_ACHIEVED
+
+  // Système (6 types)
+  EMAIL_VERIFICATION
+  NEW_LOGIN
+  SECURITY_UPDATE
+  NEW_FEATURE
+  MAINTENANCE_SCHEDULED
+  TECHNICAL_ISSUE
+
+  // Commercial (8 types)
+  SERVICE_PROMOTION
+  NEW_CATEGORY
+  SPECIAL_OFFER
+  PREMIUM_EVENT
+  SEASONAL_DISCOUNT
+  NEW_PRICING
+  LOYALTY_PROGRAM
+  SPONSORED_EVENT
+
+  // Personnalisées (6 types)
+  NEARBY_EVENTS
+  SIMILAR_EVENTS
+  WEEKEND_EVENTS
+  SEASONAL_EVENTS
+  POPULAR_EVENTS
+  RECOMMENDED_EVENTS
+
+  // Urgence (6 types)
+  EVENT_MODIFIED
+  EVENT_CANCELLED
+  TECHNICAL_PROBLEM
+  EVENT_POSTPONED
+  LOCATION_CHANGE
+  TIME_CHANGE
+}
+
+enum NotificationPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  READ
+  FAILED
+}
+
+model Notification {
+  id                Int                @id @default(autoincrement())
+  user_id           Int
+  type              NotificationType
+  title             String
+  message           String
+  priority          NotificationPriority @default(MEDIUM)
+  status            NotificationStatus   @default(PENDING)
+  data              Json?              // Données supplémentaires (event_id, booking_id, etc.)
+  read_at           DateTime?
+  sent_at           DateTime?
+  created_at        DateTime           @default(now())
+  updated_at        DateTime           @updatedAt
+
+  // Relations
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+model NotificationPreference {
+  id                Int                @id @default(autoincrement())
+  user_id           Int                @unique
+  email_enabled     Boolean            @default(true)
+  push_enabled      Boolean            @default(true)
+  sms_enabled       Boolean            @default(false)
+  in_app_enabled    Boolean            @default(true)
+  
+  // Préférences par type
+  planning_enabled  Boolean            @default(true)
+  booking_enabled   Boolean            @default(true)
+  social_enabled    Boolean            @default(true)
+  performance_enabled Boolean          @default(true)
+  system_enabled    Boolean            @default(true)
+  commercial_enabled Boolean           @default(false)
+  personalized_enabled Boolean         @default(true)
+  urgent_enabled    Boolean            @default(true)
+  
+  created_at        DateTime           @default(now())
+  updated_at        DateTime           @updatedAt
+
+  // Relations
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("notification_preferences")
+}

@@ -1,0 +1,139 @@
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .all-\[unset\] {
+    all: unset;
+  }
+}
+
+:root {
+  --assignment-1-big-title-font-family: "Montserrat", Helvetica;
+  --assignment-1-big-title-font-size: 48px;
+  --assignment-1-big-title-font-style: normal;
+  --assignment-1-big-title-font-weight: 700;
+  --assignment-1-big-title-letter-spacing: 0px;
+  --assignment-1-big-title-line-height: normal;
+  --assignment-1-big-title-w-line-height-font-family: "Montserrat", Helvetica;
+  --assignment-1-big-title-w-line-height-font-size: 48px;
+  --assignment-1-big-title-w-line-height-font-style: normal;
+  --assignment-1-big-title-w-line-height-font-weight: 700;
+  --assignment-1-big-title-w-line-height-letter-spacing: 0px;
+  --assignment-1-big-title-w-line-height-line-height: 70px;
+  --assignment-1-medium-title-font-family: "Open Sans", Helvetica;
+  --assignment-1-medium-title-font-size: 32px;
+  --assignment-1-medium-title-font-style: normal;
+  --assignment-1-medium-title-font-weight: 600;
+  --assignment-1-medium-title-letter-spacing: 0px;
+  --assignment-1-medium-title-line-height: normal;
+  --assignment-1-section-title-font-family: "Montserrat", Helvetica;
+  --assignment-1-section-title-font-size: 40px;
+  --assignment-1-section-title-font-style: normal;
+  --assignment-1-section-title-font-weight: 700;
+  --assignment-1-section-title-letter-spacing: 0px;
+  --assignment-1-section-title-line-height: normal;
+  --assignment-1-small-text-font-family: "Open Sans", Helvetica;
+  --assignment-1-small-text-font-size: 22px;
+  --assignment-1-small-text-font-style: normal;
+  --assignment-1-small-text-font-weight: 600;
+  --assignment-1-small-text-letter-spacing: 0px;
+  --assignment-1-small-text-line-height: normal;
+  --assignment-1-small-title-font-family: "Open Sans", Helvetica;
+  --assignment-1-small-title-font-size: 24px;
+  --assignment-1-small-title-font-style: normal;
+  --assignment-1-small-title-font-weight: 600;
+  --assignment-1-small-title-letter-spacing: 0px;
+  --assignment-1-small-title-line-height: normal;
+  
+  /* Nouveau schéma de couleurs */
+  --assignment-1dark-bluish-grey: #000000;
+  --assignment-1dark-grey: #333333;
+  --assignment-1dark-navy-blue: #000000;
+  --assignment-1light-grey: #f5f5f5;
+  --assignment-1white: #ffffff;
+  --assignment-1yellow: #04b1d9;
+  --light-black: #000000;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 60 20% 95%; /* dfe0c5 en HSL */
+    --foreground: 0 0% 0%; /* Noir pour les textes */
+
+    --muted: 60 20% 90%; /* Version plus claire de la couleur principale */
+    --muted-foreground: 0 0% 40%; /* Gris foncé pour les textes secondaires */
+
+    --popover: 0 0% 100%; /* Blanc pur */
+    --popover-foreground: 0 0% 0%; /* Noir */
+
+    --border: 60 20% 85%; /* Bordure légèrement plus foncée */
+    --input: 60 20% 90%; /* Input avec la couleur principale */
+
+    --card: 0 0% 100%; /* Blanc pour les cartes */
+    --card-foreground: 0 0% 0%; /* Noir pour le texte des cartes */
+
+    --primary: 199 96% 43%; /* 04b1d9 en HSL - couleur secondaire */
+    --primary-foreground: 0 0% 100%; /* Blanc pour le texte sur le primaire */
+
+    --secondary: 60 20% 95%; /* dfe0c5 - couleur principale */
+    --secondary-foreground: 0 0% 0%; /* Noir pour le texte sur le secondaire */
+
+    --accent: 199 96% 43%; /* 04b1d9 - couleur secondaire pour les accents */
+    --accent-foreground: 0 0% 100%; /* Blanc pour le texte sur l'accent */
+
+    --destructive: 4 90% 58%; /* f24638 en HSL - couleur d'accent */
+    --destructive-foreground: 0 0% 100%; /* Blanc pour le texte sur le destructif */
+
+    --ring: 199 96% 43%; /* 04b1d9 pour les anneaux de focus */
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 0 0% 10%; /* Fond sombre */
+    --foreground: 0 0% 100%; /* Texte blanc */
+
+    --muted: 0 0% 15%; /* Muted sombre */
+    --muted-foreground: 0 0% 70%; /* Texte muted clair */
+
+    --accent: 199 96% 43%; /* 04b1d9 - garde la couleur secondaire */
+    --accent-foreground: 0 0% 100%; /* Blanc */
+
+    --popover: 0 0% 15%; /* Popover sombre */
+    --popover-foreground: 0 0% 100%; /* Texte blanc */
+
+    --border: 0 0% 20%; /* Bordure sombre */
+    --input: 0 0% 15%; /* Input sombre */
+
+    --card: 0 0% 15%; /* Carte sombre */
+    --card-foreground: 0 0% 100%; /* Texte blanc */
+
+    --primary: 199 96% 43%; /* 04b1d9 - garde la couleur secondaire */
+    --primary-foreground: 0 0% 100%; /* Blanc */
+
+    --secondary: 60 20% 95%; /* dfe0c5 - garde la couleur principale */
+    --secondary-foreground: 0 0% 0%; /* Noir */
+
+    --destructive: 4 90% 58%; /* f24638 - garde la couleur d'accent */
+    --destructive-foreground: 0 0% 100%; /* Blanc */
+
+    --ring: 199 96% 43%; /* 04b1d9 */
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
