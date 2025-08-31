@@ -4,16 +4,22 @@ import { Request } from 'express';
 export interface User {
   id: number;
   email: string;
-  password: string;
+  password: string | null;
   first_name: string;
   last_name: string;
+  avatar: string | null;
+  is_email_verified: boolean;
+  google_id: string | null;
+  facebook_id: string | null;
+  apple_id: string | null;
+  auth_provider: 'EMAIL' | 'GOOGLE' | 'FACEBOOK' | 'APPLE';
   created_at: Date;
   updated_at: Date;
 }
 
 export interface CreateUserRequest {
   email: string;
-  password: string;
+  password?: string;
   first_name: string;
   last_name: string;
 }
@@ -101,7 +107,7 @@ export interface ApiResponse<T = any> {
 }
 
 // Auth types
-export interface AuthRequest extends Request {
+export interface AuthRequest extends Omit<Request, 'user'> {
   user?: User;
 }
 

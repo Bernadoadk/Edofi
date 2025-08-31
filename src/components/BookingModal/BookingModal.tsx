@@ -100,16 +100,16 @@ export const BookingModal: React.FC<BookingModalProps> = ({
     return getSubTotal() + getTax();
   };
 
-  const canProceed = () => {
+  const canProceed = (): boolean => {
     switch (currentStep) {
       case 'select-tickets':
         return getTotalQuantity() > 0;
       case 'attendee-details':
         const phoneNumber = attendeeDetails.phone.replace(/\D/g, '');
-        return attendeeDetails.fullName && 
+        return Boolean(attendeeDetails.fullName && 
                attendeeDetails.email && 
                attendeeDetails.phone && 
-               phoneNumber.length === 10;
+               phoneNumber.length === 10);
       case 'order-summary':
         return true;
       default:

@@ -73,7 +73,7 @@ class NotificationService {
   // Marquer une notification comme lue
   async markAsRead(notificationId: number): Promise<Notification> {
     try {
-      const response = await api.put(`${this.baseUrl}/${notificationId}/read`);
+      const response = await api.put(`${this.baseUrl}/${notificationId}/read`, {});
       return response;
     } catch (error) {
       console.error('Error marking notification as read:', error);
@@ -84,7 +84,7 @@ class NotificationService {
   // Marquer toutes les notifications comme lues
   async markAllAsRead(userId: number): Promise<void> {
     try {
-      await api.put(`${this.baseUrl}/user/${userId}/mark-all-read`);
+      await api.put(`${this.baseUrl}/user/${userId}/mark-all-read`, {});
     } catch (error) {
       console.error('Error marking all notifications as read:', error);
       throw new Error('Failed to mark all notifications as read');

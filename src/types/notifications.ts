@@ -234,17 +234,17 @@ export interface NotificationIconProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
-export interface NotificationPriorityColors {
+export type NotificationPriorityColors = {
   [key in NotificationPriority]: {
     bg: string;
     text: string;
     border: string;
   };
-}
+};
 
-export interface NotificationTypeIcons {
+export type NotificationTypeIcons = {
   [key in NotificationType]: string;
-}
+};
 
 // Types pour les catégories
 export interface NotificationCategory {

@@ -26,7 +26,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
   onClose,
   onNotificationUpdate
 }) => {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [preferences, setPreferences] = useState<NotificationPreference | null>(null);
   const [loading, setLoading] = useState(false);
@@ -40,7 +40,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
 
   // Charger les notifications
   const loadNotifications = async () => {
-    if (!user?.id) return;
+    if (!user?.id || !isAuthenticated) return;
 
     try {
       setLoading(true);
@@ -57,7 +57,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
 
   // Charger les préférences
   const loadPreferences = async () => {
-    if (!user?.id) return;
+    if (!user?.id || !isAuthenticated) return;
 
     try {
       const data = await notificationService.getUserPreferences(user.id);
@@ -80,7 +80,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
       );
       
       // Mettre à jour le compteur
-      if (user?.id) {
+      if (user?.id && isAuthenticated) {
         const newCount = await notificationService.getUnreadCount(user.id);
         onNotificationUpdate(newCount);
       }
@@ -96,7 +96,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
       setNotifications(prev => prev.filter(notif => notif.id !== notificationId));
       
       // Mettre à jour le compteur
-      if (user?.id) {
+      if (user?.id && isAuthenticated) {
         const newCount = await notificationService.getUnreadCount(user.id);
         onNotificationUpdate(newCount);
       }
@@ -107,7 +107,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
 
   // Marquer toutes comme lues
   const handleMarkAllAsRead = async () => {
-    if (!user?.id) return;
+    if (!user?.id || !isAuthenticated) return;
 
     try {
       await notificationService.markAllAsRead(user.id);
@@ -126,7 +126,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
 
   // Mettre à jour les préférences
   const handleUpdatePreferences = async (newPreferences: UpdateNotificationPreferenceRequest) => {
-    if (!user?.id) return;
+    if (!user?.id || !isAuthenticated) return;
 
     try {
       const updatedPreferences = await notificationService.updateUserPreferences(user.id, newPreferences);
@@ -138,13 +138,12 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
 
   // Test du système de notifications
   const handleTestNotifications = async () => {
-    if (!user?.id) return;
+    if (!user?.id || !isAuthenticated) return;
 
     try {
       const demo = createNotificationDemo(user.id);
       await demo.quickTest();
       await loadNotifications();
-      await loadUnreadCount();
     } catch (err) {
       console.error('Error testing notifications:', err);
     }
@@ -152,19 +151,19 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
 
   // Charger les données au montage et quand les filtres changent
   useEffect(() => {
-    if (isOpen && user?.id) {
+    if (isOpen && user?.id && isAuthenticated) {
       loadNotifications();
       loadPreferences();
     }
-  }, [isOpen, user?.id, filters]);
+  }, [isOpen, user?.id, isAuthenticated, filters]);
 
   // Rafraîchir les notifications toutes les 30 secondes
   useEffect(() => {
-    if (!isOpen || !user?.id) return;
+    if (!isOpen || !user?.id || !isAuthenticated) return;
 
     const interval = setInterval(loadNotifications, 30000);
     return () => clearInterval(interval);
-  }, [isOpen, user?.id]);
+  }, [isOpen, user?.id, isAuthenticated]);
 
   const unreadCount = notifications.filter(n => !n.read_at).length;
 

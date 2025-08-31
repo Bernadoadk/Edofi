@@ -1,81 +1,78 @@
-# 🚀 Evently Backend API
+# 🚀 Edofi Backend API
 
-Backend API pour la plateforme de gestion d'événements Edofi, développé avec TypeScript, Express, Prisma et PostgreSQL.
+## 📋 Vue d'ensemble
 
-## 🛠️ Technologies Utilisées
+Backend API pour Edofi - Plateforme de gestion d'événements avec authentification sociale complète.
 
-- **TypeScript** - Langage de programmation typé
-- **Express.js** - Framework web pour Node.js
-- **Prisma** - ORM moderne pour la base de données
-- **PostgreSQL** - Base de données relationnelle
-- **JWT** - Authentification par tokens
-- **bcrypt** - Hachage des mots de passe
-- **Multer** - Gestion des uploads de fichiers
-- **Express Validator** - Validation des données
+## 🔐 Authentification Sociale
 
-## 📁 Structure du Projet
+L'application supporte l'authentification via :
+- ✅ Google OAuth 2.0
+- ✅ Facebook Login
+- ✅ Apple Sign-In
 
+### Configuration requise
+
+1. **Variables d'environnement** - Créez un fichier `.env` dans le dossier `server/` :
+
+```env
+# Database
+DATABASE_URL="postgresql://username:password@localhost:5432/evently_db"
+
+# JWT
+JWT_SECRET="your-super-secret-jwt-key-here"
+
+# Session
+SESSION_SECRET="your-session-secret-key-here"
+
+# Frontend URL
+FRONTEND_URL="http://localhost:5173"
+
+# Google OAuth
+GOOGLE_CLIENT_ID="your-google-client-id"
+GOOGLE_CLIENT_SECRET="your-google-client-secret"
+GOOGLE_CALLBACK_URL="http://localhost:5000/api/auth/social/google/callback"
+
+# Facebook OAuth
+FACEBOOK_APP_ID="your-facebook-app-id"
+FACEBOOK_APP_SECRET="your-facebook-app-secret"
+FACEBOOK_CALLBACK_URL="http://localhost:5000/api/auth/social/facebook/callback"
+
+# Apple Sign-In
+APPLE_CLIENT_ID="your-apple-client-id"
+APPLE_TEAM_ID="your-apple-team-id"
+APPLE_KEY_ID="your-apple-key-id"
+APPLE_PRIVATE_KEY_PATH="path/to/your/apple/private/key.p8"
+APPLE_CALLBACK_URL="http://localhost:5000/api/auth/social/apple/callback"
 ```
-server/
-├── prisma/
-│   ├── schema.prisma    # Schéma de base de données
-│   └── seed.ts         # Script de données initiales
-├── src/
-│   ├── controllers/    # Contrôleurs de l'API
-│   ├── middleware/     # Middlewares personnalisés
-│   ├── routes/         # Définition des routes
-│   ├── types/          # Types TypeScript
-│   ├── utils/          # Utilitaires
-│   ├── lib/            # Configuration des librairies
-│   └── index.ts        # Point d'entrée de l'application
-├── uploads/            # Dossier des fichiers uploadés
-├── package.json        # Dépendances et scripts
-├── tsconfig.json       # Configuration TypeScript
-└── .env               # Variables d'environnement
-```
 
-## 🚀 Installation et Configuration
+2. **Configuration des fournisseurs OAuth** - Consultez `../SOCIAL_AUTH_CONFIG.md` pour les instructions détaillées.
 
-### 1. Installation des dépendances
+## 🏃‍♂️ Installation et démarrage
+
+### 1. Installer les dépendances
 
 ```bash
-cd server
 npm install
 ```
 
-### 2. Configuration de la base de données
-
-1. **Installer PostgreSQL** sur votre machine
-2. **Créer une base de données** nommée `evently_db`
-3. **Configurer les variables d'environnement** dans le fichier `.env` :
-
-```env
-DATABASE_URL="postgresql://postgres:password@localhost:5432/evently_db?schema=public"
-PORT=5000
-NODE_ENV=development
-JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
-```
-
-### 3. Configuration de la base de données
+### 2. Configurer la base de données
 
 ```bash
 # Générer le client Prisma
 npm run db:generate
 
-# Pousser le schéma vers la base de données
-npm run db:push
-
-# (Optionnel) Exécuter les migrations
+# Appliquer les migrations
 npm run db:migrate
 
-# Peupler la base avec des données de test
-npm run db:seed
+# Ou pousser le schéma directement
+npm run db:push
 ```
 
-### 4. Démarrage du serveur
+### 3. Démarrer le serveur
 
 ```bash
-# Mode développement (avec hot reload)
+# Mode développement
 npm run dev
 
 # Mode production
@@ -83,131 +80,136 @@ npm run build
 npm start
 ```
 
-## 📡 API Endpoints
+## 🧪 Tests
 
-### 🔐 Authentification
-
-- `POST /api/auth/register` - Inscription d'un utilisateur
-- `POST /api/auth/login` - Connexion d'un utilisateur
-
-### 🎉 Événements
-
-- `GET /api/events` - Récupérer tous les événements publiés
-- `GET /api/events/:id` - Récupérer un événement par ID
-- `POST /api/events` - Créer un nouvel événement (authentifié)
-- `PUT /api/events/:id` - Modifier un événement (authentifié)
-- `DELETE /api/events/:id` - Supprimer un événement (authentifié)
-- `PATCH /api/events/:id/publish` - Publier/dépublier un événement (authentifié)
-
-### 📂 Catégories
-
-- `GET /api/events/categories` - Récupérer toutes les catégories
-
-### 🏥 Santé
-
-- `GET /health` - Vérifier l'état du serveur
-
-## 🔧 Scripts Disponibles
+### Tester la configuration d'authentification sociale
 
 ```bash
-npm run dev          # Démarrage en mode développement
-npm run build        # Compilation TypeScript
-npm run start        # Démarrage en mode production
-npm run db:generate  # Générer le client Prisma
-npm run db:push      # Pousser le schéma vers la DB
-npm run db:migrate   # Exécuter les migrations
-npm run db:studio    # Ouvrir Prisma Studio
-npm run db:seed      # Peupler la base de données
+npm run test:social-auth
 ```
 
-## 🗄️ Modèles de Données
+Ce script vérifie :
+- ✅ La connexion à la base de données
+- ✅ La structure de la table users
+- ✅ Les variables d'environnement
+- ✅ Les URLs de callback
+- ✅ Les routes d'authentification
 
-### User
-- `id` - Identifiant unique
-- `email` - Email unique
-- `password` - Mot de passe hashé
-- `first_name` - Prénom
-- `last_name` - Nom
-- `created_at` - Date de création
-- `updated_at` - Date de mise à jour
+## 📊 Base de données
 
-### Category
-- `id` - Identifiant unique
-- `name` - Nom de la catégorie
-- `description` - Description (optionnel)
-- `icon` - Icône (optionnel)
-- `created_at` - Date de création
-- `updated_at` - Date de mise à jour
+### Schéma utilisateur étendu
 
-### Event
-- `id` - Identifiant unique
-- `title` - Titre de l'événement
-- `description` - Description
-- `event_type` - Type (single/recurring)
-- `start_date` - Date de début
-- `start_time` - Heure de début
-- `end_date` - Date de fin (optionnel)
-- `end_time` - Heure de fin
-- `duration_type` - Type de durée (days/hours)
-- `duration_value` - Valeur de la durée
-- `location_address` - Adresse
-- `location_lat` - Latitude
-- `location_lng` - Longitude
-- `banner_image` - Image de bannière (optionnel)
-- `is_published` - Statut de publication
-- `user_id` - ID de l'utilisateur créateur
-- `category_id` - ID de la catégorie
-- `created_at` - Date de création
-- `updated_at` - Date de mise à jour
+Le modèle `User` inclut maintenant :
 
-## 🔒 Authentification
+```prisma
+model User {
+  id         Int      @id @default(autoincrement())
+  email      String   @unique
+  password   String?  // Optionnel pour l'authentification sociale
+  first_name String
+  last_name  String
+  avatar     String?  // URL de l'avatar
+  is_email_verified Boolean @default(false)
+  
+  // Identifiants sociaux
+  google_id  String?  @unique
+  facebook_id String? @unique
+  apple_id   String?  @unique
+  auth_provider AuthProvider @default(EMAIL)
+  
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
-L'API utilise JWT (JSON Web Tokens) pour l'authentification. Pour les routes protégées, incluez le token dans le header :
+  // Relations
+  events Event[]
+  notifications Notification[]
+  notification_preferences NotificationPreference?
 
-```
-Authorization: Bearer <your-jwt-token>
-```
+  @@map("users")
+}
 
-## 📤 Upload de Fichiers
-
-L'API supporte l'upload d'images pour les bannières d'événements :
-- Format accepté : JPEG, JPG, PNG, GIF
-- Taille maximale : 5MB
-- Champ : `banner_image`
-
-## 🧪 Données de Test
-
-Le script de seed crée automatiquement :
-- 8 catégories d'événements
-- 1 utilisateur de test (`test@evently.com` / `password123`)
-- 4 événements d'exemple
-
-## 🛠️ Développement
-
-### Variables d'environnement de développement
-
-```env
-DATABASE_URL="postgresql://postgres:password@localhost:5432/evently_db?schema=public"
-PORT=5000
-NODE_ENV=development
-JWT_SECRET=dev-secret-key
+enum AuthProvider {
+  EMAIL
+  GOOGLE
+  FACEBOOK
+  APPLE
+}
 ```
 
-### Outils de développement
+## 🔗 Routes d'API
 
-- **Prisma Studio** : `npm run db:studio` - Interface graphique pour la base de données
-- **Hot Reload** : `npm run dev` - Redémarrage automatique lors des modifications
+### Authentification sociale
 
-## 🚀 Déploiement
+- `GET /api/auth/social/google` - Initier l'authentification Google
+- `GET /api/auth/social/google/callback` - Callback Google
+- `GET /api/auth/social/facebook` - Initier l'authentification Facebook
+- `GET /api/auth/social/facebook/callback` - Callback Facebook
+- `GET /api/auth/social/apple` - Initier l'authentification Apple
+- `GET /api/auth/social/apple/callback` - Callback Apple
+- `POST /api/auth/social/link-account` - Lier un compte social
+- `GET /api/auth/social/check-email/:email` - Vérifier l'existence d'un email
 
-1. **Build de production** : `npm run build`
-2. **Variables d'environnement** : Configurer les variables de production
-3. **Base de données** : Configurer la base de données de production
-4. **Démarrage** : `npm start`
+### Authentification classique
 
-## 📝 Notes
+- `POST /api/auth/register` - Inscription
+- `POST /api/auth/login` - Connexion
+- `GET /api/auth/profile` - Profil utilisateur
+- `PUT /api/auth/profile` - Mettre à jour le profil
+- `PUT /api/auth/change-password` - Changer le mot de passe
 
-- L'API est configurée pour accepter les requêtes CORS depuis `localhost:3000`, `localhost:5173` et `localhost:5174`
-- Les logs sont activés en mode développement
-- Les erreurs sont gérées de manière centralisée
-- La validation des données est effectuée avec Express Validator
+## 🔒 Sécurité
+
+- **JWT Tokens** - Authentification stateless
+- **Sessions sécurisées** - Gestion des sessions avec express-session
+- **Validation des callbacks** - Vérification côté serveur
+- **Gestion d'erreurs** - Erreurs sécurisées et informatives
+- **CORS configuré** - Autorisation des origines spécifiques
+
+## 🐛 Dépannage
+
+### Erreurs courantes
+
+1. **"Invalid redirect URI"**
+   - Vérifiez les URLs de callback dans les consoles développeur
+   - Assurez-vous que les domaines correspondent
+
+2. **"Client ID not found"**
+   - Vérifiez les variables d'environnement
+   - Redémarrez le serveur après modification du `.env`
+
+3. **"Database connection failed"**
+   - Vérifiez que PostgreSQL est en cours d'exécution
+   - Vérifiez l'URL de connexion à la base de données
+
+### Logs utiles
+
+```bash
+# Vérifier les logs du serveur
+npm run dev
+
+# Vérifier la base de données
+npm run db:studio
+
+# Tester la configuration
+npm run test:social-auth
+```
+
+## 📚 Documentation
+
+- [Guide de configuration sociale](../SOCIAL_AUTH_CONFIG.md)
+- [Documentation Passport.js](http://www.passportjs.org/)
+- [Google OAuth 2.0](https://developers.google.com/identity/protocols/oauth2)
+- [Facebook Login](https://developers.facebook.com/docs/facebook-login/)
+- [Apple Sign-In](https://developer.apple.com/sign-in-with-apple/)
+
+## 🤝 Contribution
+
+1. Fork le projet
+2. Créez une branche feature (`git checkout -b feature/AmazingFeature`)
+3. Commit vos changements (`git commit -m 'Add some AmazingFeature'`)
+4. Push vers la branche (`git push origin feature/AmazingFeature`)
+5. Ouvrez une Pull Request
+
+## 📄 Licence
+
+Ce projet est sous licence ISC.

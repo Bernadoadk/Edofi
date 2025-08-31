@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Bell } from 'lucide-react';
 import { Button } from './ui/button';
 import { NotificationCenter } from './NotificationCenter/NotificationCenter';
 import { useAuth } from '../contexts/AuthContext';
@@ -15,12 +16,12 @@ export const NotificationIcon: React.FC<NotificationIconProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(initialCount);
   const [loading, setLoading] = useState(false);
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
 
   // Charger le nombre de notifications non lues
   useEffect(() => {
     const loadUnreadCount = async () => {
-      if (!user?.id) return;
+      if (!user?.id || !isAuthenticated) return;
       
       try {
         setLoading(true);
@@ -38,7 +39,7 @@ export const NotificationIcon: React.FC<NotificationIconProps> = ({
     // Rafraîchir toutes les 30 secondes
     const interval = setInterval(loadUnreadCount, 30000);
     return () => clearInterval(interval);
-  }, [user?.id]);
+  }, [user?.id, isAuthenticated]);
 
   const handleNotificationClick = () => {
     setIsOpen(!isOpen);
@@ -47,10 +48,15 @@ export const NotificationIcon: React.FC<NotificationIconProps> = ({
   const handleNotificationCenterClose = () => {
     setIsOpen(false);
     // Rafraîchir le compteur après fermeture
-    if (user?.id) {
+    if (user?.id && isAuthenticated) {
       notificationService.getUnreadCount(user.id).then(setUnreadCount);
     }
   };
+
+  // Ne pas afficher l'icône si l'utilisateur n'est pas authentifié
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <div className="relative">
@@ -61,19 +67,9 @@ export const NotificationIcon: React.FC<NotificationIconProps> = ({
         disabled={loading}
       >
         {/* Notification Bell Icon */}
-        <svg
-          className={`w-6 h-6 text-assignment-1white ${loading ? 'animate-pulse' : ''}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M15 17h5l-5 5v-5zM10.5 3.75a6 6 0 00-6 6v3.75a6 6 0 005.25 5.95V21a.75.75 0 001.5 0v-1.55A6 6 0 0018 13.5V9.75a6 6 0 00-6-6h-1.5z"
-          />
-        </svg>
+        <Bell
+          className={`w-12 h-12 text-assignment-1white ${loading ? 'animate-pulse' : ''}`}
+        />
 
         {/* Notification Badge */}
         {unreadCount > 0 && (

@@ -83,6 +83,11 @@ class ApiService {
     const data = await response.json();
     
     if (!response.ok) {
+      // If we get a 401 Unauthorized, the token might be invalid
+      if (response.status === 401) {
+        // Clear invalid token
+        this.logout();
+      }
       throw new Error(data.message || 'Something went wrong');
     }
     
@@ -233,7 +238,25 @@ class ApiService {
 
   // Check if user is authenticated
   isAuthenticated(): boolean {
-    return !!localStorage.getItem('token');
+    const token = localStorage.getItem('token');
+    return !!token;
+  }
+
+  // Verify if the current token is valid
+  async verifyToken(): Promise<boolean> {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return false;
+
+      const response = await fetch(`${this.baseURL}/auth/profile`, {
+        method: 'GET',
+        headers: this.getAuthHeaders()
+      });
+
+      return response.ok;
+    } catch (error) {
+      return false;
+    }
   }
 
   // Get current user from localStorage

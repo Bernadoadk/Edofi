@@ -5,6 +5,9 @@ import { Input } from "../../components/ui/input";
 import { Card, CardContent } from "../../components/ui/card";
 import apiService from "../../services/api";
 import { useAuth } from "../../contexts/AuthContext";
+import { socialAuthService } from "../../services/socialAuthService";
+import { FcGoogle } from 'react-icons/fc';
+import { FaFacebook, FaApple } from 'react-icons/fa';
 
 export const SignInScreen = (): JSX.Element => {
   const navigate = useNavigate();
@@ -16,6 +19,7 @@ export const SignInScreen = (): JSX.Element => {
 
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [socialLoading, setSocialLoading] = useState<string | null>(null);
   const [error, setError] = useState("");
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +42,9 @@ export const SignInScreen = (): JSX.Element => {
       
       // Login the user and redirect to home page on successful signin
       if (response.data?.user && response.data?.token) {
-        login(response.data.user, response.data.token);
+        // Ensure we have the correct user type with all required properties
+        const user = response.data.user as any;
+        login(user, response.data.token);
         navigate("/");
       }
     } catch (err: any) {
@@ -48,15 +54,38 @@ export const SignInScreen = (): JSX.Element => {
     }
   };
 
+  const handleSocialAuth = async (provider: 'google' | 'facebook' | 'apple') => {
+    setSocialLoading(provider);
+    setError("");
+    
+    try {
+      switch (provider) {
+        case 'google':
+          await socialAuthService.initiateGoogleAuth();
+          break;
+        case 'facebook':
+          await socialAuthService.initiateFacebookAuth();
+          break;
+        case 'apple':
+          await socialAuthService.initiateAppleAuth();
+          break;
+      }
+    } catch (error) {
+      console.error(`${provider} auth error:`, error);
+      setError(`Erreur lors de la connexion avec ${provider}`);
+      setSocialLoading(null);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-assignment-1white flex items-center justify-center px-4">
+    <div className="min-h-screen bg-assignment-1dark-navy-blue flex items-center justify-center px-4">
       <div className="w-full max-w-[500px]">
         {/* Logo */}
-        <div className="flex items-center justify-center mb-12">
+        <div className="flex items-center justify-center mb-5">
           <img
             src="/src/assets/Fiwè.png"
             alt="Fiwè Logo"
-            className="h-16 w-auto"
+            className="h-60 w-150"
           />
         </div>
 
@@ -143,21 +172,39 @@ export const SignInScreen = (): JSX.Element => {
               <div className="flex gap-4 justify-center mb-6">
                 <Button
                   variant="outline"
-                  className="w-12 h-12 rounded-full border border-[#e0e0e0] p-0"
+                  className="w-12 h-12 rounded-full border border-[#e0e0e0] p-0 hover:bg-gray-50"
+                  onClick={() => handleSocialAuth('google')}
+                  disabled={socialLoading !== null}
                 >
-                  <img src="/google-icon.svg" alt="Google" className="w-6 h-6" />
+                  {socialLoading === 'google' ? (
+                    <div className="w-6 h-6 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+                  ) : (
+                    <FcGoogle className="w-6 h-6" />
+                  )}
                 </Button>
                 <Button
                   variant="outline"
-                  className="w-12 h-12 rounded-full border border-[#e0e0e0] p-0"
+                  className="w-12 h-12 rounded-full border border-[#e0e0e0] p-0 hover:bg-blue-50"
+                  onClick={() => handleSocialAuth('facebook')}
+                  disabled={socialLoading !== null}
                 >
-                  <img src="/facebook-icon.svg" alt="Facebook" className="w-6 h-6" />
+                  {socialLoading === 'facebook' ? (
+                    <div className="w-6 h-6 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+                  ) : (
+                    <FaFacebook className="w-6 h-6 text-blue-600" />
+                  )}
                 </Button>
                 <Button
                   variant="outline"
-                  className="w-12 h-12 rounded-full border border-[#e0e0e0] p-0"
+                  className="w-12 h-12 rounded-full border border-[#e0e0e0] p-0 hover:bg-gray-900"
+                  onClick={() => handleSocialAuth('apple')}
+                  disabled={socialLoading !== null}
                 >
-                  <img src="/apple-icon.svg" alt="Apple" className="w-6 h-6" />
+                  {socialLoading === 'apple' ? (
+                    <div className="w-6 h-6 border-2 border-gray-300 border-t-white rounded-full animate-spin"></div>
+                  ) : (
+                    <FaApple className="w-6 h-6 text-black" />
+                  )}
                 </Button>
               </div>
 

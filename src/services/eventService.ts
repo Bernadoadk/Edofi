@@ -35,6 +35,24 @@ export interface Event {
   tickets?: Ticket[];
 }
 
+export interface CreateEventData {
+  title: string;
+  description: string;
+  category_id: number;
+  event_type: 'single' | 'recurring';
+  start_date: string;
+  start_time: string;
+  end_date?: string;
+  end_time?: string;
+  duration_type?: 'days' | 'hours';
+  duration_value?: number;
+  location_address: string;
+  location_lat: number;
+  location_lng: number;
+  banner_image?: string;
+  is_published: boolean;
+}
+
 export interface EventFilters {
   category_id?: number;
   search?: string;
@@ -95,7 +113,7 @@ class EventService {
   }
 
   // Créer un événement
-  async createEvent(eventData: Event, bannerImage?: File) {
+  async createEvent(eventData: CreateEventData, bannerImage?: File) {
     const formData = new FormData();
     
     // Ajouter les données de l'événement

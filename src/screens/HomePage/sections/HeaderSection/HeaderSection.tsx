@@ -42,8 +42,9 @@ export const HeaderSection = (): JSX.Element => {
         <NavigationMenuList className="flex gap-7">
           {navItems.map((item) => (
             <NavigationMenuItem key={item.name}>
-              <Link to={item.path}>
-                <NavigationMenuLink
+              <NavigationMenuLink asChild>
+                <Link
+                  to={item.path}
                   className={`flex flex-col items-center justify-center h-[85px] px-4 [font-family:'Montserrat',Helvetica] text-2xl text-assignment-1white relative`}
                 >
                   <motion.span
@@ -65,8 +66,8 @@ export const HeaderSection = (): JSX.Element => {
                         : "opacity-0 scale-x-0"
                     }`}
                   ></div>
-                </NavigationMenuLink>
-              </Link>
+                </Link>
+              </NavigationMenuLink>
             </NavigationMenuItem>
           ))}
         </NavigationMenuList>

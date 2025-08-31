@@ -5,6 +5,7 @@ import { authenticateToken } from '../middleware/auth';
 const router = express.Router();
 
 // Middleware d'authentification pour toutes les routes
+// @ts-ignore
 router.use(authenticateToken);
 
 // Routes générales

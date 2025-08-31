@@ -33,7 +33,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     }
 
     // Hasher le mot de passe
-    const hashedPassword = await hashPassword(password);
+    const hashedPassword = await hashPassword(password!);
 
     // Créer l'utilisateur
     const user = await prisma.user.create({
@@ -55,7 +55,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     // Générer le token JWT
     const token = generateToken({
       userId: user.id,
-      email: user.email
+      email: user.email!
     });
 
     const response: ApiResponse = {
@@ -105,7 +105,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     }
 
     // Vérifier le mot de passe
-    const isPasswordValid = await comparePassword(password, user.password);
+    const isPasswordValid = await comparePassword(password, user.password!);
     if (!isPasswordValid) {
       res.status(401).json({
         success: false,
@@ -117,7 +117,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     // Générer le token JWT
     const token = generateToken({
       userId: user.id,
-      email: user.email
+      email: user.email!
     });
 
     const response: ApiResponse = {

@@ -4,7 +4,7 @@ import { StepEdit } from '../../components/StepEdit';
 import { StepBanner } from '../../components/StepBanner';
 import { StepTicketing } from '../../components/StepTicketing';
 import { StepReview } from '../../components/StepReview';
-import { eventService, Event } from '../../services/eventService';
+import { eventService, Event, CreateEventData } from '../../services/eventService';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Layout } from '../../components/Layout';
@@ -100,7 +100,7 @@ export const CreateEventPage: React.FC = () => {
       setError(null);
 
       // Préparer les données pour l'API
-      const eventData: Event = {
+      const eventData: CreateEventData = {
         title: formData.title,
         description: formData.description,
         category_id: formData.category_id,

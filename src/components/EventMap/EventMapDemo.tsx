@@ -13,7 +13,11 @@ const sampleEvents = [
     location_lat: 6.3705,
     location_lng: 2.3920,
     category_name: "Concert",
-    banner_image: null
+    banner_image: undefined,
+    category_id: 1,
+    event_type: 'single' as const,
+    is_published: true,
+    user_id: 1
   },
   {
     id: 2,
@@ -25,7 +29,11 @@ const sampleEvents = [
     location_lat: 6.3720,
     location_lng: 2.3950,
     category_name: "Sports",
-    banner_image: null
+    banner_image: undefined,
+    category_id: 2,
+    event_type: 'single' as const,
+    is_published: true,
+    user_id: 1
   },
   {
     id: 3,
@@ -37,7 +45,11 @@ const sampleEvents = [
     location_lat: 6.3680,
     location_lng: 2.3880,
     category_name: "Exhibition",
-    banner_image: null
+    banner_image: undefined,
+    category_id: 3,
+    event_type: 'single' as const,
+    is_published: true,
+    user_id: 1
   },
   {
     id: 4,
@@ -49,7 +61,11 @@ const sampleEvents = [
     location_lat: 6.3750,
     location_lng: 2.3900,
     category_name: "Networking",
-    banner_image: null
+    banner_image: undefined,
+    category_id: 4,
+    event_type: 'single' as const,
+    is_published: true,
+    user_id: 1
   }
 ];
 

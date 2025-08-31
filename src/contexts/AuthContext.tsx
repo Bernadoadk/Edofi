@@ -8,6 +8,12 @@ interface User {
   lastName: string;
   phone?: string;
   role: string;
+  avatar?: string;
+  isEmailVerified?: boolean;
+  authProvider?: 'EMAIL' | 'GOOGLE' | 'FACEBOOK' | 'APPLE';
+  googleId?: string;
+  facebookId?: string;
+  appleId?: string;
 }
 
 interface AuthContextType {
@@ -39,15 +45,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     // Check if user is already logged in on app start
-    const checkAuthStatus = () => {
+    const checkAuthStatus = async () => {
       try {
         const currentUser = apiService.getCurrentUser();
         if (currentUser && apiService.isAuthenticated()) {
-          setUser(currentUser);
+          // Verify if the token is still valid
+          const isValid = await apiService.verifyToken();
+          if (isValid) {
+            setUser(currentUser);
+          } else {
+            // Token is invalid, clear everything
+            apiService.logout();
+            setUser(null);
+          }
         }
       } catch (error) {
         console.error('Error checking auth status:', error);
         apiService.logout();
+        setUser(null);
       } finally {
         setLoading(false);
       }
@@ -56,7 +71,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     checkAuthStatus();
   }, []);
 
-  const login = (user: User, token: string) => {
+  const login = async (user: User, token: string) => {
+    // Stocker le token et l'utilisateur
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
     setUser(user);
   };
 

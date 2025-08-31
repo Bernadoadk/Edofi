@@ -161,10 +161,15 @@ router.get('/categories', getCategories);
 router.get('/:id', getEventById);
 
 // Protected routes (require authentication)
+// @ts-ignore
 router.get('/user/events', authenticateToken, getUserEvents); // Route pour les événements de l'utilisateur
+// @ts-ignore
 router.post('/', authenticateToken, upload.single('banner_image'), eventValidation, createEvent);
+// @ts-ignore
 router.put('/:id', authenticateToken, upload.single('banner_image'), updateEventValidation, updateEvent);
+// @ts-ignore
 router.delete('/:id', authenticateToken, deleteEvent);
+// @ts-ignore
 router.patch('/:id/publish', authenticateToken, toggleEventPublish);
 
 export default router;

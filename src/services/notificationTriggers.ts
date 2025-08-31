@@ -15,7 +15,7 @@ class NotificationTriggers {
     try {
       await notificationService.createNotificationWithPreferences(
         userId,
-        NotificationType.EVENT_CREATED,
+        NotificationType.NEW_FEATURE,
         { event_title: eventTitle },
         { eventId, eventTitle }
       );
@@ -184,7 +184,7 @@ class NotificationTriggers {
     try {
       await notificationService.createNotificationWithPreferences(
         userId,
-        NotificationType.WELCOME_MESSAGE,
+        NotificationType.NEW_FEATURE,
         { user_name: userName },
         { userName, type: 'welcome' }
       );

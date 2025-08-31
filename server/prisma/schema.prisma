@@ -13,9 +13,18 @@ datasource db {
 model User {
   id         Int      @id @default(autoincrement())
   email      String   @unique
-  password   String
+  password   String?  // Optionnel pour l'authentification sociale
   first_name String
   last_name  String
+  avatar     String?  // URL de l'avatar
+  is_email_verified Boolean @default(false)
+  
+  // Identifiants sociaux
+  google_id  String?  @unique
+  facebook_id String? @unique
+  apple_id   String?  @unique
+  auth_provider AuthProvider @default(EMAIL)
+  
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
@@ -93,6 +102,13 @@ enum EventType {
 enum DurationType {
   days
   hours
+}
+
+enum AuthProvider {
+  EMAIL
+  GOOGLE
+  FACEBOOK
+  APPLE
 }
 
 enum NotificationType {
